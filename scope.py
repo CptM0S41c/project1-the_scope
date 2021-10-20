@@ -1,4 +1,5 @@
 import requests
+import sys
 
 '''
 The plan is still to meet and officially start on Monday 10/18 at 8PM. However, since it is the first week I figure a few extra days to get in the swing of things wouldn't hurt. While there us no due-date, project 2 begins on 10/25
@@ -29,3 +30,25 @@ Please put all discussion for this project in project1-the-scope
 
     https://ipgeolocation.io/
 '''
+
+def get_file_contents(filename):
+    """ Given a filename,
+        return the contents of that file
+    """
+    try:
+        with open(filename, 'r') as f:
+            # It's assumed our file contains a single line,
+            # with our API key
+            return f.read().strip()
+    except FileNotFoundError:
+        print("'%s' file not found" % filename)
+
+API_KEY = get_file_contents('api_key.txt')
+
+#print(API_KEY)
+
+IP_ADDR = "131.253.12.5"
+
+response = requests.get('https://api.ipgeolocation.io/ipgeo?apiKey='+API_KEY+'&ip='+IP_ADDR)
+
+print(response.text)
