@@ -1,7 +1,8 @@
 import requests
 import sys
-import pprint
+import re
 import json
+import ipaddress
 
 
 
@@ -27,12 +28,21 @@ def read_ip_file(filename):
     try:
         with open(filename, 'r') as f:
             for line in f:
+                #we clean the line
                 line_strip = line.strip()
-                list_IP.append(line_strip)
+                #we create object ipaddress
+                net = ipaddress.ip_network(line_strip)
+                if net.num_addresses == 1:
+                    #print("We got ip address ! "+str(line))
+                    list_IP.append(line_strip)             
+                else:
+                    #print("expert task")
+                    for addr in net:
+                        list_IP.append(str(addr))
     except FileNotFoundError:
         print("'%s' file not found" % filename)
     finally:
-        print(list_IP)
+        #print(list_IP)
         return list_IP
         f.close()
 
@@ -58,15 +68,31 @@ def send_IP_address(ip_address):
         ret_IP_address.append(response.text)
     return ret_IP_address
 
+def print_result(ret_from_api_json):
+
+    for result in ret_from_api_json:
+        y = json.loads(result)
+        #print(y["ip"])
+        print('the ip address '+y["ip"]+" belong to the organization "+y["organization"])
+
 
 #end of method, start on how the script behave
 ip = []
 print(len(sys.argv))
 if len(sys.argv) > 1 :
+    print("beginner task!")
     print(sys.argv[1])
     ip.append(sys.argv[1])
     geoIP_return = send_IP_address(ip)
     print(geoIP_return)
 else:
+    print("intermediate task")
     ip = read_ip_file('ips.txt')
-    geoIP_return = send_IP_address(ip)  
+    print('we have '+str(len(ip))+' ip address to check')
+    if len(ip)> 20:
+        downsize_array_of_ip = ip[0:20]
+        geoIP_return = send_IP_address(downsize_array_of_ip)
+        print_result(geoIP_return)
+    else:
+        geoIP_return = send_IP_address(ip)
+        print_result(geoIP_return)
