@@ -89,10 +89,10 @@ else:
     ip = read_ip_file('ips.txt')
     print('we have '+str(len(ip))+' ip address to check')
     if len(ip)> 20:
+        print("expert task")
         downsize_array_of_ip = ip[0:20]
         geoIP_return = send_IP_address(downsize_array_of_ip)
         print_result(geoIP_return)
     else:
-        print("expert task")
         geoIP_return = send_IP_address(ip)
         print_result(geoIP_return)
