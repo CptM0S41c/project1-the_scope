@@ -36,7 +36,6 @@ def read_ip_file(filename):
                     #print("We got ip address ! "+str(line))
                     list_IP.append(line_strip)             
                 else:
-                    #print("expert task")
                     for addr in net:
                         list_IP.append(str(addr))
     except FileNotFoundError:
@@ -78,7 +77,7 @@ def print_result(ret_from_api_json):
 
 #end of method, start on how the script behave
 ip = []
-print(len(sys.argv))
+#print(len(sys.argv))
 if len(sys.argv) > 1 :
     print("beginner task!")
     print(sys.argv[1])
@@ -94,5 +93,6 @@ else:
         geoIP_return = send_IP_address(downsize_array_of_ip)
         print_result(geoIP_return)
     else:
+        print("expert task")
         geoIP_return = send_IP_address(ip)
         print_result(geoIP_return)
